@@ -34,6 +34,7 @@ class Dataset():
         except:
             print("no cycles found")
         # core_subgraph is the graph with only training nodes (we make sure the children of the nodes that are removed are reattached to the core_subgraph)
+        #core_subgraph is the seed taxonomy
         self.core_subgraph = self._get_holdout_subgraph(train_node_ids)
         self.pseudo_leaf_node = max(full_graph.nodes) + 1
         self.definitions[self.pseudo_leaf_node] = {"label":" ","summary":" "}
