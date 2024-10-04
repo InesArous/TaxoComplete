@@ -11,6 +11,7 @@ mp.dps = 25; mp.pretty = True
 class Dataset():
     def __init__(self, graph_dataset,sampling_method,neg_number,seed):
         helpers.set_seed(seed)
+        # full_graph is the graph with training, validation and testing nodes
         full_graph = graph_dataset.taxonomy
         train_node_ids = graph_dataset.train_node_ids
         roots = graph_dataset.root
@@ -32,6 +33,7 @@ class Dataset():
                 self.full_graph.add_edge(self.root, tupl[0])
         except:
             print("no cycles found")
+        # core_subgraph is the graph with only training nodes (we make sure the children of the nodes that are removed are reattached to the core_subgraph)
         self.core_subgraph = self._get_holdout_subgraph(train_node_ids)
         self.pseudo_leaf_node = max(full_graph.nodes) + 1
         self.definitions[self.pseudo_leaf_node] = {"label":" ","summary":" "}
@@ -338,7 +340,9 @@ class Dataset():
         for node in node_to_remove:
             parents = set()
             children = set()
+            # get all predecessors of a node that is not node_ids
             ps = deque(self.full_graph.predecessors(node))
+            # get all successors of a node that is not node_ids
             cs = deque(self.full_graph.successors(node))
             while ps:
                 p = ps.popleft()
